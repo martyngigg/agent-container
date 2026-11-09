@@ -1,0 +1,8 @@
+{
+  "defaultProvider": "bifrost",
+  "defaultModel": "vllm/unsloth/Qwen3.8-27B-FP8",
+  "packages": [
+    "npm:@pgilad/pi-vertex-anthropic",
+    "npm:@twogiants/pi-anthropic-vertex"
+  ]
+}
