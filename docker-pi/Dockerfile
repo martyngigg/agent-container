@@ -3,10 +3,20 @@ FROM node:24-bookworm-slim
 ARG PI_VERSION=latest
 ARG SKILLS_VERSION=latest
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash ca-certificates fd-find git ripgrep \
-    && ln -s /usr/bin/fdfind /usr/local/bin/fd \
-    && rm -rf /var/lib/apt/lists/*
+# Apt tools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    curl \
+    fd-find \
+    git \
+    ripgrep  && \
+    ln -s /usr/bin/fdfind /usr/local/bin/fd && \
+    rm -rf /var/lib/apt/lists/*
+
+# Astral uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 # Pi
 RUN npm install -g --ignore-scripts "@earendil-works/pi-coding-agent@${PI_VERSION}"
