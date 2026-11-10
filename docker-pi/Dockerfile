@@ -1,6 +1,7 @@
 FROM node:24-bookworm-slim
 
 ARG PI_VERSION=latest
+ARG SKILLS_VERSION=latest
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends bash ca-certificates fd-find git ripgrep \
@@ -9,6 +10,9 @@ RUN apt-get update \
 
 # Pi
 RUN npm install -g --ignore-scripts "@earendil-works/pi-coding-agent@${PI_VERSION}"
+
+# Skills cmd
+RUN npm install -g --ignore-scripts "skills@${SKILLS_VERSION}"
 
 # User and working directory
 RUN mkdir -p /workspace && chown node:node /workspace
