@@ -4,5 +4,6 @@
   "packages": [
     "npm:@pgilad/pi-vertex-anthropic",
     "npm:@twogiants/pi-anthropic-vertex"
-  ]
+  ],
+  "hideThinkingBlock": "true"
 }
