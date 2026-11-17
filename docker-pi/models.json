@@ -1,11 +1,37 @@
 {
   "$schema": "https://pi.dev/schemas/models.schema.json",
   "providers": {
-    "bifrost": {
+    "bifrost-ppd": {
       "baseUrl": "https://vicuna.pp.rl.ac.uk/v1",
-      "api": "openai-responses",
+      "api": "openai-completions",
       "apiKey": "$BIFROST_API_KEY",
-      "models": [{ "id": "vllm/unsloth/Qwen3.8-27B-FP8" }]
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "vllm/unsloth/Qwen3.8-27B-FP8",
+          "name": "Qwen 3.8 27B FP8 (PPD/vLLM)",
+          "reasoning": true,
+          "input": ["text"],
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": "minimal",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "contextWindow": 262144,
+          "maxTokens": 65536,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "compat": {
+            "supportsReasoningEffort": true
+          }
+        }
+      ]
     }
   }
 }

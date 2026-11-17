@@ -1,9 +1,10 @@
 {
-  "defaultProvider": "bifrost",
+  "defaultProvider": "bifrost-ppd",
   "defaultModel": "vllm/unsloth/Qwen3.8-27B-FP8",
+  "hideThinkingBlock": "true",
   "packages": [
-    "npm:@pgilad/pi-vertex-anthropic",
-    "npm:@twogiants/pi-anthropic-vertex"
-  ],
-  "hideThinkingBlock": "true"
+    "npm:@twogiants/pi-anthropic-vertex",
+    "npm:pi-web-access",
+    "npm:@juicesharp/rpiv-ask-user-question"
+  ]
 }

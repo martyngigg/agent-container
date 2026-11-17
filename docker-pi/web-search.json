@@ -1,0 +1,6 @@
+{
+  "fetch": {
+    "answerProvider": "bifrost-ppd",
+    "answerModel": "vllm/unsloth/Qwen3.8-27B-FP8"
+  }
+}

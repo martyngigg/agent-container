@@ -1,9 +1,7 @@
+FROM ghcr.io/astral-sh/uv:latest AS astral_uv
 FROM node:24-bookworm-slim
 
-ARG PI_VERSION=latest
-ARG SKILLS_VERSION=latest
-
-# Apt tools
+# System tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     bash \
@@ -11,26 +9,47 @@ RUN apt-get update && \
     curl \
     fd-find \
     git \
+    jq \
     ripgrep  && \
     ln -s /usr/bin/fdfind /usr/local/bin/fd && \
     rm -rf /var/lib/apt/lists/*
 
-# Astral uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+# Python
+COPY --from=astral_uv /uv /uvx /usr/local/bin/
 
-# Pi
-RUN npm install -g --ignore-scripts "@earendil-works/pi-coding-agent@${PI_VERSION}"
+# Pi user and working directory
+RUN userdel -r node && \
+    useradd -m -s /bin/bash -u 1000 pi && \
+    mkdir -p /workspace && chown pi:pi /workspace
 
-# Skills cmd
-RUN npm install -g --ignore-scripts "skills@${SKILLS_VERSION}"
+# Switch user
+USER pi
+WORKDIR /home/pi
 
-# User and working directory
-RUN mkdir -p /workspace && chown node:node /workspace
-USER node
+# Put global npm packages in a writable location
+ENV NPM_CONFIG_PREFIX=/home/pi/.npm-global
+ENV NODE_PATH=${NPM_CONFIG_PREFIX}/lib/node_modules
+ENV PATH=${NPM_CONFIG_PREFIX}/bin:${PATH}
+
+# Create required directories directories
+RUN mkdir -p \
+    ${NPM_CONFIG_PREFIX}/bin \
+    ${NPM_CONFIG_PREFIX}/lib \
+    /home/pi/.pi/agent
+
+# Install pi globally
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+# Install plugins globally (also need registering in settings.json)
+RUN npm install -g --ignore-scripts \
+    @twogiants/pi-anthropic-vertex \
+    pi-web-access \
+    @juicesharp/rpiv-ask-user-question
+
+# Configure global models & settings
+COPY --chown=pi:pi models.json /home/pi/.pi/agent/models.json
+COPY --chown=pi:pi settings.json /home/pi/.pi/agent/settings.json
+COPY --chown=pi:pi web-search.json /home/pi/.pi/agent/web-search.json
+
 WORKDIR /workspace
-
-# Extensions (need to be installed in userspace)
-RUN pi install npm:@pgilad/pi-vertex-anthropic
-RUN pi install npm:@twogiants/pi-anthropic-vertex
-
 ENTRYPOINT ["pi"]

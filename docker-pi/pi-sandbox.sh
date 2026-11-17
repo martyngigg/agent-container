@@ -8,7 +8,7 @@ MODELS_JSON=models.json
 SETTINGS_JSON=settings.json
 EXTENSIONS_DIR=extensions
 PI_IMAGE=pi-sandbox
-PI_AGENT_HOME=/home/node/.pi/agent
+PI_AGENT_HOME=/home/pi/.pi/agent
 PI_AGENT_HOME_VOLUME=pi-agent-home
 
 GCLOUD_HOME="$HOME/.config/gcloud"
@@ -62,12 +62,7 @@ main() {
       -e BIFROST_API_KEY
       -e GOOGLE_CLOUD_PROJECT
       -e GOOGLE_CLOUD_LOCATION
-      -v "$GCLOUD_HOME:/home/node/.config/gcloud:ro"
-      -v "$PI_AGENT_HOME_VOLUME":"$PI_AGENT_HOME"
-      -v "$THIS_DIR/$AGENTS_MD":"$PI_AGENT_HOME/$AGENTS_MD:ro"
-      -v "$THIS_DIR/$MODELS_JSON":"$PI_AGENT_HOME/$MODELS_JSON:ro"
-      -v "$THIS_DIR/$SETTINGS_JSON":"$PI_AGENT_HOME/$SETTINGS_JSON:ro"
-      -v "$THIS_DIR/$EXTENSIONS_DIR":"$PI_AGENT_HOME/$EXTENSIONS_DIR:ro"
+      -v "$GCLOUD_HOME:/home/pi/.config/gcloud:ro"
     )
 
     if [[ "$mount_workspace" == true ]]; then
