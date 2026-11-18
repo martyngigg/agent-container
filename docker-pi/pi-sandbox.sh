@@ -66,6 +66,12 @@ main() {
     )
 
     if [[ "$mount_workspace" == true ]]; then
+      # Refuse to mount $HOME
+      if [[ "$PWD" == "$HOME" ]]; then
+          echo "Current directory is \$HOME. Refusing to mount \$HOME as a workspace."
+          echo "Either remove '-w' or change directory."
+          exit 1
+      fi
       docker_args+=( -v "$PWD:/workspace:rw" )
       # Disallow git write operations but allow read
       if [[ -d "$PWD/.git" ]]; then
