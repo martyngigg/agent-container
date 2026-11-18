@@ -66,7 +66,11 @@ main() {
     )
 
     if [[ "$mount_workspace" == true ]]; then
-      docker_args+=( -v "$PWD:/workspace" )
+      docker_args+=( -v "$PWD:/workspace:rw" )
+      # Disallow git write operations but allow read
+      if [[ -d "$PWD/.git" ]]; then
+        docker_args+=( -v "$PWD/.git:/workspace/.git:ro" )
+      fi
     fi
 
     if [[ ${#args[@]} -gt 0 ]]; then
